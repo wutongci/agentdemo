@@ -4,7 +4,10 @@ workspace/
 
 # Environment
 .env
+.env.bak
 
 # OS
 .DS_Store
 
+.playwright-mcp/
+.claude/
