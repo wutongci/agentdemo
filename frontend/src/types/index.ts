@@ -6,8 +6,10 @@ export interface Session {
   updated_at: string
 }
 
+export type MessageRole = 'user' | 'assistant' | 'system' | 'tool'
+
 export interface Message {
-  role: "user" | "assistant"
+  role: MessageRole
   content: string
   timestamp: string
 }
@@ -59,4 +61,3 @@ export interface ToolEventData {
 export interface DoneData {
   reason: string
 }
-

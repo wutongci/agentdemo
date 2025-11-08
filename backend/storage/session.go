@@ -67,6 +67,11 @@ func (s *SessionStore) Get(id string) (*models.Session, error) {
 		return nil, fmt.Errorf("session not found: %s", id)
 	}
 
+	// 向后兼容：为旧会话设置默认 AgentType
+	if session.AgentType == "" {
+		session.AgentType = "simple-chat"
+	}
+
 	return session, nil
 }
 

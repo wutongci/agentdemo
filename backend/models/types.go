@@ -7,6 +7,7 @@ type Session struct {
 	ID        string    `json:"id"`
 	Title     string    `json:"title"`
 	AgentID   string    `json:"agent_id"`
+	AgentType string    `json:"agent_type"` // "simple-chat" | "writing-assistant" | "code-analysis"
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

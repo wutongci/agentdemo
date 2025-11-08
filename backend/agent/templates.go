@@ -5,8 +5,36 @@ import (
 	"github.com/wordflowlab/agentsdk/pkg/types"
 )
 
+// GetSimpleChatTemplate 简单对话模板（支持 Skills 和 Commands）
+func GetSimpleChatTemplate() *types.AgentTemplateDefinition {
+	return &types.AgentTemplateDefinition{
+		ID:    "simple-chat",
+		Model: "", // 将从环境变量中读取
+		SystemPrompt: `你是一位智能助手，能够帮助用户解决各种问题。
+
+你的核心能力包括：
+1. **对话交流**：理解用户需求，提供清晰、准确的回答
+2. **文件操作**：可以读取和保存文件，帮助用户管理内容
+3. **专业知识**：根据对话上下文，自动激活相关的专业知识库
+4. **命令执行**：支持 Slash Commands，如 /analyze、/review 等
+
+工作原则：
+- 理解用户的真实需求和意图
+- 提供专业、准确且有价值的建议
+- 保持友好、耐心的交流态度
+- 适时使用工具来帮助用户完成任务
+- 当用户提到代码质量、安全等话题时，自动激活相关专业知识
+
+注意：
+- 你可以使用 / 开头的命令来执行特定任务
+- 当检测到特定关键词时，相关专业知识会自动激活以帮助你提供更好的建议`,
+		Tools: []interface{}{"fs_read", "fs_write"},
+	}
+}
+
 // RegisterAllTemplates 注册所有模板到注册表
 func RegisterAllTemplates(registry *agent.TemplateRegistry) {
+	registry.Register(GetSimpleChatTemplate())
 	registry.Register(GetResearcherTemplate())
 	registry.Register(GetWriterTemplate())
 	registry.Register(GetEditorTemplate())

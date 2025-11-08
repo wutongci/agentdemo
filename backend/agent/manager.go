@@ -60,6 +60,7 @@ func NewManager() (*Manager, error) {
 	// 注册所有模板（包括新的协作模板）
 	// RegisterAllTemplates 在 templates.go 中定义
 	// 这里直接注册模板
+	templateRegistry.Register(GetSimpleChatTemplate())      // 简单对话（支持 Skills 和 Commands）
 	templateRegistry.Register(GetResearcherTemplate())
 	templateRegistry.Register(GetWriterTemplate())
 	templateRegistry.Register(GetEditorTemplate())
@@ -137,6 +138,12 @@ func (m *Manager) GetOrCreateAgent(ctx context.Context, agentID string, template
 		}
 	}
 
+	// 获取当前工作目录的绝对路径
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("get current directory: %w", err)
+	}
+
 	config := &types.AgentConfig{
 		AgentID:    agentID,
 		TemplateID: templateID,
@@ -148,11 +155,11 @@ func (m *Manager) GetOrCreateAgent(ctx context.Context, agentID string, template
 		},
 		Sandbox: &types.SandboxConfig{
 			Kind:    types.SandboxKindLocal,
-			WorkDir: "./workspace",
+			WorkDir: currentDir + "/workspace",
 		},
 		SkillsPackage: &types.SkillsPackageConfig{
 			Source:          "local",
-			Path:            "./skills-package",
+			Path:            currentDir + "/skills-package",
 			CommandsDir:     "commands",
 			SkillsDir:       "skills",
 			EnabledCommands: []string{"analyze", "explain", "optimize", "review", "plan"},
@@ -220,6 +227,12 @@ func (m *Manager) CreateTemporaryAgent(ctx context.Context, templateID string) (
 		}
 	}
 
+	// 获取当前工作目录的绝对路径
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("get current directory: %w", err)
+	}
+
 	config := &types.AgentConfig{
 		TemplateID: templateID,
 		ModelConfig: &types.ModelConfig{
@@ -230,11 +243,11 @@ func (m *Manager) CreateTemporaryAgent(ctx context.Context, templateID string) (
 		},
 		Sandbox: &types.SandboxConfig{
 			Kind:    types.SandboxKindLocal,
-			WorkDir: "./workspace",
+			WorkDir: currentDir + "/workspace",
 		},
 		SkillsPackage: &types.SkillsPackageConfig{
 			Source:          "local",
-			Path:            "./skills-package",
+			Path:            currentDir + "/skills-package",
 			CommandsDir:     "commands",
 			SkillsDir:       "skills",
 			EnabledCommands: []string{"analyze", "explain", "optimize", "review", "plan"},

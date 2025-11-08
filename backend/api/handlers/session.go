@@ -24,7 +24,8 @@ func NewSessionHandler(sessionStore *storage.SessionStore) *SessionHandler {
 // CreateSession 创建新会话
 func (h *SessionHandler) CreateSession(c *gin.Context) {
 	var req struct {
-		Title string `json:"title"`
+		Title     string `json:"title"`
+		AgentType string `json:"agent_type"` // "simple-chat" | "writing-assistant" | "code-analysis"
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -36,16 +37,22 @@ func (h *SessionHandler) CreateSession(c *gin.Context) {
 	sessionID := uuid.New().String()
 	agentID := "agt:" + uuid.New().String()
 
-	// 设置默认标题
+	// 设置默认标题和 AgentType
 	title := req.Title
 	if title == "" {
-		title = "新写作会话"
+		title = "新对话会话"
+	}
+
+	agentType := req.AgentType
+	if agentType == "" {
+		agentType = "simple-chat" // 默认为简单对话（支持 Skills 和 Commands）
 	}
 
 	session := &models.Session{
-		ID:      sessionID,
-		Title:   title,
-		AgentID: agentID,
+		ID:        sessionID,
+		Title:     title,
+		AgentID:   agentID,
+		AgentType: agentType,
 	}
 
 	if err := h.sessionStore.Create(session); err != nil {

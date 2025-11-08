@@ -41,8 +41,8 @@ export function Layout() {
         </Button>
       </div>
 
-      {/* 中间：文档编辑器 + 工具栏 */}
-      <div className="flex-1 flex flex-col min-w-0 border-r">
+      {/* 中间：文档编辑器 + 工具栏（在顶部留白，与导航分离） */}
+      <div className="flex-1 flex flex-col min-w-0 border-r pt-3 px-3">
         {/* 编辑器 */}
         <div className="flex-1 min-h-0">
           <DocumentEditor onTextSelect={setSelectedText} />
@@ -54,11 +54,10 @@ export function Layout() {
         </div>
       </div>
 
-      {/* 右侧：对话区 */}
-      <div className="w-[400px] flex flex-col">
+      {/* 右侧：对话区（加宽并在顶部留白） */}
+      <div className="w-[520px] md:w-[560px] xl:w-[640px] flex flex-col min-h-0 shrink-0 pt-3 pr-3">
         <ChatPanel sessionId={currentSessionId} />
       </div>
     </div>
   )
 }
-
