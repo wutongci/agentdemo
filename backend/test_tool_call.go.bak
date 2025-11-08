@@ -1,0 +1,96 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/coso/agentdemo/backend/agent"
+	"github.com/joho/godotenv"
+	"github.com/wordflowlab/agentsdk/pkg/types"
+)
+
+func main() {
+	// 加载环境变量
+	godotenv.Load("../.env")
+
+	log.Println("=== Testing Tool Calls ===")
+
+	// 使用现有的 AgentManager
+	manager, err := agent.NewManager()
+	if err != nil {
+		log.Fatalf("Failed to create manager: %v", err)
+	}
+
+	// 创建一个测试模板 - 使用最简单的系统提示词
+	testTemplate := &types.AgentTemplateDefinition{
+		ID:           "test-simple",
+		Model:        "", // 将从环境变量读取
+		SystemPrompt: `You are a helpful assistant. When asked to write a file, use the fs_write tool.`,
+		Tools:        []interface{}{"fs_write"},
+	}
+
+	// 注册模板
+	templateRegistry := manager.GetDependencies().TemplateRegistry
+	templateRegistry.Register(testTemplate)
+
+	// 创建 Agent
+	ctx := context.Background()
+	ag, err := manager.CreateTemporaryAgent(ctx, "test-simple")
+	if err != nil {
+		log.Fatalf("Failed to create agent: %v", err)
+	}
+
+	log.Printf("Created agent: %s", ag.ID())
+
+	// 订阅事件来检测工具调用
+	eventCh := ag.Subscribe([]types.AgentChannel{types.ChannelProgress, types.ChannelMonitor}, nil)
+	toolUseEvents := []string{}
+
+	go func() {
+		for envelope := range eventCh {
+			// 检查事件类型
+			eventStr := fmt.Sprintf("%T", envelope.Event)
+			log.Printf("Event received: %s", eventStr)
+			switch envelope.Event.(type) {
+			case *types.ProgressToolStartEvent:
+				toolUseEvents = append(toolUseEvents, "tool_start")
+				log.Printf("✅ Tool start event detected!")
+			case *types.ProgressToolEndEvent:
+				toolUseEvents = append(toolUseEvents, "tool_end")
+				log.Printf("✅ Tool end event detected!")
+			}
+		}
+	}()
+
+	// 测试 1: 简单的文件写入
+	log.Println("\n=== Test 1: Simple file write ===")
+	result1, err := ag.Chat(ctx, "Write 'Hello World' to test.txt using fs_write.")
+	if err != nil {
+		log.Fatalf("Chat failed: %v", err)
+	}
+
+	log.Printf("Status: %s", result1.Status)
+	log.Printf("Text response: %s", result1.Text)
+
+	// 等待事件处理
+	time.Sleep(3 * time.Second)
+
+	log.Printf("\n=== Summary ===")
+	log.Printf("Tool events received: %d", len(toolUseEvents))
+	for i, evt := range toolUseEvents {
+		log.Printf("  Event %d: %s", i+1, evt)
+	}
+
+	if len(toolUseEvents) == 0 {
+		log.Println("❌ No tool calls detected!")
+		log.Println("\nThis means the model is not returning tool_use blocks.")
+		log.Println("Possible causes:")
+		log.Println("  1. Tool schema format issue")
+		log.Println("  2. System prompt not clear enough")
+		log.Println("  3. Model not recognizing tools")
+	} else {
+		log.Println("✅ Tool calls detected!")
+	}
+}

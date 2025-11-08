@@ -1,0 +1,10 @@
+# Agent SDK data
+.agentsdk/
+workspace/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
