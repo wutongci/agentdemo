@@ -33,10 +33,38 @@ export function SkillsPage() {
   });
 
   // 处理命令执行
-  const handleExecuteCommand = (commandName: string) => {
-    // TODO: 实现命令执行逻辑
-    console.log('执行命令:', commandName);
-    alert(`执行命令: /${commandName}\n\n此功能即将实现！`);
+  const handleExecuteCommand = async (commandName: string) => {
+    try {
+      // 简单输入参数
+      const args = window.prompt(`执行 /${commandName} 的参数 (可留空)`, "") || "";
+
+      // 1) 创建一个新的会话（simple-chat 模板支持 Slash Commands）
+      const title = `/${commandName} 命令会话`;
+      const session = await fetch('http://localhost:8080/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, agent_type: 'simple-chat' }),
+      }).then((r) => {
+        if (!r.ok) throw new Error('创建会话失败');
+        return r.json();
+      });
+
+      // 2) 发送 Slash Command 到该会话
+      const message = `/${commandName}${args.trim() ? ' ' + args.trim() : ''}`;
+      await fetch(`http://localhost:8080/api/sessions/${session.id}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      }).then((r) => {
+        if (!r.ok) throw new Error('发送命令失败');
+        return r.json();
+      });
+
+      // 3) 通知用户到“简单对话”查看执行过程与结果
+      alert(`已发送: ${message}\n\n请切换到“简单对话”，选择新建的会话查看执行过程与结果。`);
+    } catch (err) {
+      alert(`执行失败: ${(err as Error).message}`);
+    }
   };
 
   // 处理技能启用/禁用

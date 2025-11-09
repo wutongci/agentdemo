@@ -59,7 +59,7 @@ MODEL=claude-3-haiku-20240307
 #### 测试 API Key：
 
 ```bash
-./test-yunwu-key.sh
+./scripts/test-yunwu-key.sh
 ```
 
 ### 2. 启动后端
@@ -92,20 +92,20 @@ npm run dev
 
 ## 📋 便捷脚本
 
-项目提供了几个便捷脚本：
+项目提供了几个便捷脚本（位于 `scripts/` 目录）：
 
 ```bash
 # 测试 API Key 是否有效
-./test-yunwu-key.sh
+./scripts/test-yunwu-key.sh
 
 # 测试完整 API 功能
-./test-api.sh
+./scripts/test-api.sh
 
 # 启动后端（便捷脚本）
-./start-backend.sh
+./scripts/start-backend.sh
 
 # 启动前端（便捷脚本）
-./start-frontend.sh
+./scripts/start-frontend.sh
 ```
 
 ## 🔧 yunwu.ai 配置说明
@@ -136,7 +136,7 @@ yunwu.ai 支持以下 Anthropic 模型（按价格从低到高）：
 **解决方案**：
 1. 确认已在 yunwu.ai 创建 API Key
 2. 检查 `.env` 文件中的 `ANTHROPIC_API_KEY` 配置
-3. 运行 `./test-yunwu-key.sh` 测试
+3. 运行 `./scripts/test-yunwu-key.sh` 测试
 
 #### ⚠️ "429 Too Many Requests" 错误
 
@@ -153,7 +153,7 @@ yunwu.ai 支持以下 Anthropic 模型（按价格从低到高）：
 #### 🔄 AI 无响应
 
 **诊断步骤**：
-1. 运行 `./test-yunwu-key.sh` 检查 API Key
+1. 运行 `./scripts/test-yunwu-key.sh` 检查 API Key
 2. 查看后端日志：`tail -f /tmp/backend.log`
 3. 检查浏览器控制台是否有 WebSocket 错误
 4. 确认后端和前端都在运行
@@ -176,10 +176,17 @@ agentdemo/
 │   │   ├── services/       # API 客户端
 │   │   └── types/          # TypeScript 类型
 │   └── package.json
+├── docs/                   # 文档目录
+│   ├── OSS_SETUP.md       # 开源设置指南
+│   ├── README_SKILLS.md   # Skills 功能说明
+│   └── SKILLS_DEMO.md     # Skills 演示文档
+├── scripts/                # 脚本目录
+│   ├── test-yunwu-key.sh  # API Key 测试脚本
+│   ├── test-api.sh        # 完整功能测试脚本
+│   ├── start-backend.sh   # 启动后端脚本
+│   └── start-frontend.sh  # 启动前端脚本
 ├── .env                    # 环境变量配置
-├── test-yunwu-key.sh      # API Key 测试脚本
-├── test-api.sh            # 完整功能测试脚本
-└── README.md
+└── README.md               # 项目说明文档
 ```
 
 ## 🛠️ 开发指南
