@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+const API_BASE_URL = '/api';
 
 export interface MiddlewareInfo {
   name: string;
@@ -27,22 +27,20 @@ export interface ToolInfo {
  * 获取所有可用的 Middleware
  */
 export const getAvailableMiddlewares = async (): Promise<MiddlewareInfo[]> => {
-  const response = await apiClient.get<{
-    middlewares: MiddlewareInfo[];
-    total: number;
-  }>('/middleware');
-  return response.data.middlewares;
+  const response = await fetch(`${API_BASE_URL}/middleware`);
+  if (!response.ok) throw new Error('Failed to fetch middlewares');
+  const data = await response.json();
+  return data.middlewares;
 };
 
 /**
  * 获取特定 Agent 的 Middleware 配置
  */
 export const getAgentMiddlewares = async (agentId: string): Promise<string[]> => {
-  const response = await apiClient.get<{
-    agent_id: string;
-    middlewares: string[];
-  }>(`/middleware/agent/${agentId}`);
-  return response.data.middlewares;
+  const response = await fetch(`${API_BASE_URL}/middleware/agent/${agentId}`);
+  if (!response.ok) throw new Error('Failed to fetch agent middlewares');
+  const data = await response.json();
+  return data.middlewares;
 };
 
 /**
@@ -51,11 +49,10 @@ export const getAgentMiddlewares = async (agentId: string): Promise<string[]> =>
 export const getMiddlewareStats = async (
   agentId: string
 ): Promise<MiddlewareStatsResponse[]> => {
-  const response = await apiClient.get<{
-    agent_id: string;
-    stats: MiddlewareStatsResponse[];
-  }>(`/middleware/agent/${agentId}/stats`);
-  return response.data.stats;
+  const response = await fetch(`${API_BASE_URL}/middleware/agent/${agentId}/stats`);
+  if (!response.ok) throw new Error('Failed to fetch middleware stats');
+  const data = await response.json();
+  return data.stats;
 };
 
 /**
@@ -64,10 +61,8 @@ export const getMiddlewareStats = async (
 export const getMiddlewareTools = async (
   middlewareName: string
 ): Promise<ToolInfo[]> => {
-  const response = await apiClient.get<{
-    middleware: string;
-    tools: ToolInfo[];
-    total: number;
-  }>(`/middleware/${middlewareName}/tools`);
-  return response.data.tools;
+  const response = await fetch(`${API_BASE_URL}/middleware/${middlewareName}/tools`);
+  if (!response.ok) throw new Error('Failed to fetch middleware tools');
+  const data = await response.json();
+  return data.tools;
 };

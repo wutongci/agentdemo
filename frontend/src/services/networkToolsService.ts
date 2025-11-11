@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import { api } from './api';
 
 export interface HttpRequestParams {
   url: string;
@@ -42,10 +42,8 @@ export interface WebSearchResponse {
  */
 export const executeHttpRequest = async (params: HttpRequestParams): Promise<HttpRequestResponse> => {
   // 通过创建临时 Agent 并发送消息来执行工具
-  const sessionResponse = await apiClient.post<{ id: string }>('/sessions', {
-    title: 'HTTP Request Test',
-  });
-  const sessionId = sessionResponse.data.id;
+  const session = await api.createSession('HTTP Request Test');
+  const sessionId = session.id;
 
   try {
     // 构造工具调用消息
@@ -55,14 +53,11 @@ Method: ${params.method || 'GET'}
 ${params.headers ? `Headers: ${JSON.stringify(params.headers)}` : ''}
 ${params.body ? `Body: ${params.body}` : ''}`;
 
-    const response = await apiClient.post(`/sessions/${sessionId}/chat`, {
-      message: toolMessage,
-    });
-
-    return response.data;
+    const response = await api.sendMessage(sessionId, toolMessage);
+    return response;
   } finally {
     // 清理会话
-    await apiClient.delete(`/sessions/${sessionId}`).catch(() => {});
+    await api.deleteSession(sessionId).catch(() => {});
   }
 };
 
@@ -71,10 +66,8 @@ ${params.body ? `Body: ${params.body}` : ''}`;
  */
 export const executeWebSearch = async (params: WebSearchParams): Promise<WebSearchResponse> => {
   // 通过创建临时 Agent 并发送消息来执行工具
-  const sessionResponse = await apiClient.post<{ id: string }>('/sessions', {
-    title: 'Web Search Test',
-  });
-  const sessionId = sessionResponse.data.id;
+  const session = await api.createSession('Web Search Test');
+  const sessionId = session.id;
 
   try {
     // 构造工具调用消息
@@ -84,13 +77,10 @@ Max Results: ${params.max_results || 5}
 Topic: ${params.topic || 'general'}
 Include Raw Content: ${params.include_raw_content ? 'Yes' : 'No'}`;
 
-    const response = await apiClient.post(`/sessions/${sessionId}/chat`, {
-      message: toolMessage,
-    });
-
-    return response.data;
+    const response = await api.sendMessage(sessionId, toolMessage);
+    return response;
   } finally {
     // 清理会话
-    await apiClient.delete(`/sessions/${sessionId}`).catch(() => {});
+    await api.deleteSession(sessionId).catch(() => {});
   }
 };
