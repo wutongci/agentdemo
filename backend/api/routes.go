@@ -31,6 +31,7 @@ func SetupRoutes(
 	writingHandler := handlers.NewWritingHandler(agentManager)
 	workflowHandler := handlers.NewWorkflowHandler(workflowOrchestrator)
 	skillsHandler := handlers.NewSkillsHandler("./skills-package")
+	middlewareHandler := handlers.NewMiddlewareHandler(agentManager)
 	wsHandler := ws.NewHandler(sessionStore, agentManager)
 
 	// API 路由组
@@ -77,6 +78,15 @@ func SetupRoutes(
 			// Skills 路由
 			skills.GET("/skills", skillsHandler.ListSkills)
 			skills.GET("/skills/:name", skillsHandler.GetSkill)
+		}
+
+		// Middleware 管理（新功能 - Phase 6C）
+		middleware := api.Group("/middleware")
+		{
+			middleware.GET("", middlewareHandler.GetAvailableMiddlewares)
+			middleware.GET("/agent/:agentId", middlewareHandler.GetAgentMiddlewares)
+			middleware.GET("/agent/:agentId/stats", middlewareHandler.GetMiddlewareStats)
+			middleware.GET("/:name/tools", middlewareHandler.GetMiddlewareTools)
 		}
 	}
 

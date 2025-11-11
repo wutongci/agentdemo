@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import type { WSMessage } from '../types'
 
-const WS_BASE_URL = 'ws://localhost:8080/ws'
+const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws'
 
 // 流式输出缓冲配置
 const FLUSH_INTERVAL = 30        // 主缓冲时间(毫秒) - 缩短以更快响应

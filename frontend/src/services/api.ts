@@ -1,6 +1,6 @@
 import type { Session, WritingToolResponse } from '../types'
 
-const API_BASE_URL = 'http://localhost:8080/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 export const api = {
   // 会话管理

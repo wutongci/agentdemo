@@ -1,8 +1,37 @@
-# AI 写作助手 - Web Agent 演示项目
+# AI Agent 演示项目 - 完整展示 AgentSDK 最新功能
 
-基于 [writeflow-sdk (agentsdk)](https://github.com/wordflowlab/agentsdk) 开发的智能写作助手，提供对话式写作和多种文本处理工具。
+基于 [AgentSDK](https://github.com/wordflowlab/agentsdk) 开发的综合演示项目，完整展示 AgentSDK Phase 6 的所有核心功能。
+
+> **🎯 本项目目标**: 作为 AgentSDK 的最佳参考实现，帮助开发者快速理解和上手 AgentSDK 的所有功能。
 
 ## ✨ 功能特性
+
+### 🆕 最新功能
+
+#### Phase 6C: Middleware 系统
+
+- 🔧 **Middleware 系统**：
+  - **Summarization Middleware**: 自动总结长对话（>170k tokens）
+  - **Filesystem Middleware**: 6个文件系统工具（fs_read, fs_write, fs_edit, fs_grep, fs_glob, fs_ls）
+  - **SubAgent Middleware**: 任务委托给子代理执行
+  - **可视化控制台**: 查看 Middleware 状态、工具列表和统计信息
+  - **洋葱模型架构**: 支持自定义 Middleware，优先级控制
+
+#### Phase 6B-1: 网络工具
+
+- 🌐 **HTTP 请求工具**：
+  - 支持 6 种 HTTP 方法（GET/POST/PUT/DELETE/PATCH/HEAD）
+  - 自动 JSON 解析
+  - 自定义请求头和请求体
+  - 可配置超时（默认 30 秒）
+
+- 🔍 **Web 搜索工具**：
+  - 基于 Tavily API 的实时搜索
+  - 支持 3 种主题类型（general/news/finance）
+  - 可配置结果数量（1-10）
+  - 可选包含完整页面内容
+
+### 核心功能
 
 - 💬 **智能对话**：与 AI 进行自然对话，获取写作建议
 - ✍️ **写作工具**：
@@ -13,6 +42,8 @@
   - 🌐 翻译：多语言翻译支持
 - 💾 **会话管理**：保存和管理多个写作会话
 - 🔄 **实时响应**：通过 WebSocket 获取流式 AI 响应
+- 🤝 **多 Agent 协作**：Pool 和 Room 机制实现 Agent 间消息路由
+- ⚡ **Skills 系统**：Commands 和 Skills 注入
 
 ## 🏗️ 技术栈
 
@@ -84,11 +115,43 @@ npm run dev
 
 ### 4. 使用应用
 
-打开浏览器访问 `http://localhost:5173`，您将看到：
+打开浏览器访问 `http://localhost:5173`，应用包含以下页面：
 
-- **左侧**：会话列表
-- **中间**：文档编辑器和工具栏
-- **右侧**：AI 对话面板
+#### 🤝 协作工作流
+
+- 多 Agent 协作演示
+- Pool 和 Room 管理
+- 工作流编排
+
+#### 💬 简单对话
+
+- 基础对话界面
+- 会话管理
+- 实时 WebSocket 通信
+
+#### 🔧 Middleware 控制台 ⭐ **新功能**
+
+- 查看所有可用的 Middleware
+- Middleware 工具列表
+- 功能说明和使用示例
+- 支持的 Middleware：
+  - **summarization**: 自动总结长对话
+  - **filesystem**: 6 个文件系统工具
+  - **subagent**: 子代理任务委托
+
+#### 🌐 网络工具 ⭐ **新功能**
+
+- HTTP 请求工具测试界面
+- Web 搜索工具演示
+- 支持的工具：
+  - **http_request**: HTTP/HTTPS 请求（6 种方法）
+  - **web_search**: Tavily API 搜索（需要 API Key）
+
+#### ⚡ Skills 管理
+
+- Commands 列表
+- Skills 查看
+- 执行 Skills 命令
 
 ## 📋 便捷脚本
 

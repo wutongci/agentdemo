@@ -1,6 +1,6 @@
 import type { CommandInfo, SkillInfo, CommandsResponse, SkillsResponse } from '../types/skills';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /**
  * 获取所有可用命令

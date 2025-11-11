@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/Layout';
 import { WorkflowPage } from './components/WorkflowPage';
 import { SkillsPage } from './components/skills';
+import { MiddlewareConsole } from './components/MiddlewareConsole';
+import { NetworkTools } from './components/NetworkTools';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +16,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'simple' | 'workflow' | 'skills'>('workflow');
+  const [currentPage, setCurrentPage] = useState<'simple' | 'workflow' | 'skills' | 'middleware' | 'network'>('workflow');
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -44,6 +46,26 @@ function App() {
               💬 简单对话
             </button>
             <button
+              onClick={() => setCurrentPage('middleware')}
+              className={`px-4 py-2 rounded transition-colors ${
+                currentPage === 'middleware'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              🔧 Middleware
+            </button>
+            <button
+              onClick={() => setCurrentPage('network')}
+              className={`px-4 py-2 rounded transition-colors ${
+                currentPage === 'network'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              🌐 网络工具
+            </button>
+            <button
               onClick={() => setCurrentPage('skills')}
               className={`px-4 py-2 rounded transition-colors ${
                 currentPage === 'skills'
@@ -60,6 +82,8 @@ function App() {
         <main className="flex-1 overflow-hidden">
           {currentPage === 'workflow' && <WorkflowPage />}
           {currentPage === 'simple' && <Layout />}
+          {currentPage === 'middleware' && <MiddlewareConsole />}
+          {currentPage === 'network' && <NetworkTools />}
           {currentPage === 'skills' && <SkillsPage />}
         </main>
       </div>

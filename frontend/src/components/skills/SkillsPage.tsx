@@ -40,7 +40,7 @@ export function SkillsPage() {
 
       // 1) 创建一个新的会话（simple-chat 模板支持 Slash Commands）
       const title = `/${commandName} 命令会话`;
-      const session = await fetch('http://localhost:8080/api/sessions', {
+      const session = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, agent_type: 'simple-chat' }),
@@ -51,7 +51,7 @@ export function SkillsPage() {
 
       // 2) 发送 Slash Command 到该会话
       const message = `/${commandName}${args.trim() ? ' ' + args.trim() : ''}`;
-      await fetch(`http://localhost:8080/api/sessions/${session.id}/chat`, {
+      await fetch(`/api/sessions/${session.id}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),

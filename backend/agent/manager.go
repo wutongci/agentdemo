@@ -165,6 +165,8 @@ func (m *Manager) GetOrCreateAgent(ctx context.Context, agentID string, template
 			EnabledCommands: []string{"analyze", "explain", "optimize", "review", "plan"},
 			EnabledSkills:   []string{"best-practices", "code-quality", "security"},
 		},
+		// 启用 Middleware 系统 (Phase 6C 新功能)
+		Middlewares: []string{"summarization"}, // 自动总结长对话 (>170k tokens)
 	}
 
 	ag, err := agent.Create(ctx, config, m.deps)
@@ -253,6 +255,8 @@ func (m *Manager) CreateTemporaryAgent(ctx context.Context, templateID string) (
 			EnabledCommands: []string{"analyze", "explain", "optimize", "review", "plan"},
 			EnabledSkills:   []string{"best-practices", "code-quality", "security"},
 		},
+		// 启用 Middleware 系统
+		Middlewares: []string{"summarization"},
 	}
 
 	ag, err := agent.Create(ctx, config, m.deps)
