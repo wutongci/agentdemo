@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/joho/godotenv v1.5.1
-	github.com/wordflowlab/agentsdk v0.0.0
+	github.com/wordflowlab/agentsdk v0.2.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -43,4 +43,4 @@ require (
 	google.golang.org/protobuf v1.34.1 // indirect
 )
 
-replace github.com/wordflowlab/agentsdk => /Users/coso/Documents/dev/ai/wordflowlab/agentsdk
+// replace github.com/wordflowlab/agentsdk => /Users/coso/Documents/dev/ai/wordflowlab/agentsdk
