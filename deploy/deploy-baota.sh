@@ -217,6 +217,21 @@ echo "============================================================"
 
 cd "$FRONTEND_DIR"
 
+# 修复 npm cache 权限问题
+echo -e "${YELLOW}🔧 检查 npm cache 权限...${NC}"
+NPM_CACHE_DIR=$(npm config get cache 2>/dev/null || echo "$HOME/.npm")
+if [ -d "$NPM_CACHE_DIR" ] && [ ! -w "$NPM_CACHE_DIR" ]; then
+    echo -e "${YELLOW}⚠️  检测到 npm cache 权限问题，尝试修复...${NC}"
+    if sudo -n true 2>/dev/null; then
+        sudo chown -R $(id -u):$(id -g) "$NPM_CACHE_DIR" 2>/dev/null || true
+        echo -e "${GREEN}✅ npm cache 权限已修复${NC}"
+    else
+        echo -e "${YELLOW}ℹ️  无 sudo 权限，使用用户级别 cache...${NC}"
+        npm config set cache "$HOME/.npm-cache" --global
+        mkdir -p "$HOME/.npm-cache"
+    fi
+fi
+
 echo -e "${YELLOW}📦 安装前端依赖...${NC}"
 npm install --production=false
 
